@@ -1,12 +1,14 @@
 package com.thomazcollet.demo.models;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -48,7 +50,8 @@ public class Users {
     @Size(groups = { CreateUser.class, UpdateUser.class }, min = 8, max = 100)
     private String password;
 
-    // private List<Tasks> tasks = new ArrayList<Tasks>();
+    @OneToMany(mappedBy = "users")
+    private List<Tasks> tasks = new ArrayList<Tasks>();
 
     // Métodos Construtores
     public Users() {
@@ -83,6 +86,14 @@ public class Users {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Tasks> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Tasks> tasks) {
+        this.tasks = tasks;
     }
 
     // HashCode e Equals
