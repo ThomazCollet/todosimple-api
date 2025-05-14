@@ -13,8 +13,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.Columns;
-import org.hibernate.validator.constraints.NotBlank;
+
 import org.springframework.scheduling.config.Task;
 
 @Entity
