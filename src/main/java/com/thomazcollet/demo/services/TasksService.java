@@ -11,6 +11,7 @@ import com.thomazcollet.demo.models.Tasks;
 import com.thomazcollet.demo.models.Users;
 
 import java.util.Optional;
+import java.util.List;
 
 @Service
 public class TasksService {
@@ -25,6 +26,11 @@ public class TasksService {
         Optional<Tasks> tasks = this.tasksRepository.findById(id);
         return tasks.orElseThrow(() -> new RuntimeException(
                 "Tarefa não encontrada! Id: " + id + ", tipo: " + Tasks.class.getName()));
+    }
+
+    public List<Tasks> findAllByUserId(Long userId){
+        List<Tasks> tasks = this.tasksRepository.findByUsers_Id(userId);
+        return tasks;
     }
 
     @Transactional
