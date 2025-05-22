@@ -12,43 +12,37 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-
-import org.springframework.scheduling.config.Task;
 
 @Entity
-@Table(name = Tasks.TABLE_NAME)
-public class Tasks {
-    public static final String TABLE_NAME = "tasks";
-    
-    // Atrubutos
+@Table(name = Task.TABLE_NAME)
+public class Task {
+    public static final String TABLE_NAME = "task";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "users_id", nullable = false, updatable = false)
-    private Users users;
+    @JoinColumn(name = "user_id", nullable = false, updatable = false)
+    private User user;
 
-    @Column(name = "description", length = 250, nullable = false)
+    @Column(name = "description", length = 255, nullable = false)
     @NotNull
     @NotEmpty
+    @Size(min = 1, max = 255)
     private String description;
 
-    // Métodos construtores
-
-    public Tasks() {
+    public Task() {
     }
 
-
-    public Tasks(long id, Users users, String description) {
+    public Task(Long id, User user, String description) {
         this.id = id;
-        this.users = users;
+        this.user = user;
         this.description = description;
     }
-
-    // Getters e Setters
 
     public Long getId() {
         return this.id;
@@ -58,12 +52,12 @@ public class Tasks {
         this.id = id;
     }
 
-    public Users getUsers() {
-        return this.users;
+    public User getUser() {
+        return this.user;
     }
 
-    public void setUsers(Users users) {
-        this.users = users;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getDescription() {
@@ -74,7 +68,22 @@ public class Tasks {
         this.description = description;
     }
 
-@Override
+    public Task id(Long id) {
+        setId(id);
+        return this;
+    }
+
+    public Task user(User user) {
+        setUser(user);
+        return this;
+    }
+
+    public Task description(String description) {
+        setDescription(description);
+        return this;
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (obj == this)
             return true;
@@ -82,13 +91,13 @@ public class Tasks {
             return false;
         if (!(obj instanceof Task))
             return false;
-        Tasks other = (Tasks) obj;
+        Task other = (Task) obj;
         if (this.id == null)
             if (other.id != null)
                 return false;
             else if (!this.id.equals(other.id))
                 return false;
-        return Objects.equals(this.id, other.id) && Objects.equals(this.users, other.users)
+        return Objects.equals(this.id, other.id) && Objects.equals(this.user, other.user)
                 && Objects.equals(this.description, other.description);
     }
 
@@ -99,6 +108,5 @@ public class Tasks {
         result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
         return result;
     }
-        
 
 }

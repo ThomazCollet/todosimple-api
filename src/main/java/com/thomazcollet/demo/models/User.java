@@ -21,50 +21,46 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import java.util.Objects;
 
 @Entity
-@Table(name = Users.TABLE_NAME)
-public class Users {
+@Table(name = User.TABLE_NAME)
+public class User {
     public interface CreateUser {
     }
 
     public interface UpdateUser {
     }
 
-    public static final String TABLE_NAME = "users";
+    public static final String TABLE_NAME = "user";
 
-    // Atributos
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // config para gerar ids automaticamente por autoincrement
-    @Column(name = "id", unique = true) // Config o nome da coluna e garante que cada ID seja unico
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true)
     private Long id;
 
-    @Column(name = "username", unique = true, length = 50, nullable = false) // Nome da coluna, tamanho maximo, e não
-                                                                             // permite valor null
+    @Column(name = "username", length = 100, nullable = false, unique = true)
     @NotNull(groups = CreateUser.class)
     @NotEmpty(groups = CreateUser.class)
-    @Size(groups = CreateUser.class, min = 2, max = 50) // Define tamanho minimo e maximo;
+    @Size(groups = CreateUser.class, min = 2, max = 100)
     private String username;
 
     @JsonProperty(access = Access.WRITE_ONLY)
-    @Column(name = "password", length = 100, nullable = false)
+    @Column(name = "password", length = 60, nullable = false)
+    @NotNull(groups = { CreateUser.class, UpdateUser.class })
     @NotEmpty(groups = { CreateUser.class, UpdateUser.class })
-    @NotEmpty(groups = { CreateUser.class, UpdateUser.class })
-    @Size(groups = { CreateUser.class, UpdateUser.class }, min = 8, max = 100)
+    @Size(groups = { CreateUser.class, UpdateUser.class }, min = 8, max = 60)
     private String password;
 
-    @OneToMany(mappedBy = "users")
-    private List<Tasks> tasks = new ArrayList<Tasks>();
+    @OneToMany(mappedBy = "user")
+    private List<Task> tasks = new ArrayList<Task>();
 
-    // Métodos Construtores
-    public Users() {
+    public User() {
     }
 
-    public Users(Long id, String username, String password) {
+    public User(Long id, String username, String password) {
         this.id = id;
         this.username = username;
         this.password = password;
     }
 
-    // Getters e Setters
     public Long getId() {
         return this.id;
     }
@@ -90,24 +86,23 @@ public class Users {
     }
 
     @JsonIgnore
-    public List<Tasks> getTasks() {
-        return tasks;
+    public List<Task> getTasks() {
+        return this.tasks;
     }
 
-    public void setTasks(List<Tasks> tasks) {
+    public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
     }
 
-    // HashCode e Equals
     @Override
     public boolean equals(Object obj) {
         if (obj == this)
             return true;
         if (obj == null)
             return false;
-        if (!(obj instanceof Users))
+        if (!(obj instanceof User))
             return false;
-        Users other = (Users) obj;
+        User other = (User) obj;
         if (this.id == null)
             if (other.id != null)
                 return false;
